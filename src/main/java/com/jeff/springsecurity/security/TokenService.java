@@ -11,12 +11,16 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.HashSet;
+import java.util.Set;
 
 //Essa class cria o Token
 @Service
-public class TokenService {
+public class TokenService implements TokenBlacklist {
     @Value("${api.security.token.secret}")
     private String secret;
+
+    private Set<String> blacklist = new HashSet<>();
     public String generateToken(User user){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret); //cria um algoritmo co base em uma senha chamada secret
@@ -46,5 +50,15 @@ public class TokenService {
 
     private Instant genExpirationDate(){
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+    }
+
+    @Override
+    public  void addToBlacklist(String token) {
+        blacklist.add(token);
+    }
+
+    @Override
+    public boolean isBlacklisted(String token) {
+        return blacklist.contains(token);
     }
 }

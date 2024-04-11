@@ -28,6 +28,8 @@ public class SecurityConfigurations {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //define o tipo de autenticação,nesse caso: statelles(uso de token)
                 .authorizeHttpRequests(authorize -> authorize  //Determino quem pode usar tal API
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        //.requestMatchers(HttpMethod.POST, "/auth/validate").hasRole("USER")
+                        //.requestMatchers(HttpMethod.POST, "/auth/logout").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN")
                         .anyRequest().authenticated()
